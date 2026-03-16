@@ -46,7 +46,7 @@ jobs:
       - name: Deploy standalone
         run: |
           rsync -avz --delete \
-            --exclude '.git' --exclude '.github' --exclude 'node_modules' \
+            --exclude '.git' --exclude '.github' \
             --exclude 'data' --exclude '*.db' --exclude '*.db-wal' --exclude '*.db-shm' \
             -e "ssh -i ~/.ssh/deploy_key" \
             server/.next/standalone/ ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:${{ secrets.DEPLOY_PATH }}/
