@@ -27,5 +27,18 @@ function initSchema(db: Database.Database) {
       title TEXT NOT NULL,
       created_at TEXT DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS welcome (
+      id INTEGER PRIMARY KEY,
+      message TEXT NOT NULL
+    );
   `);
+
+  // Seed default welcome message
+  const row = db.prepare("SELECT COUNT(*) as cnt FROM welcome").get() as { cnt: number };
+  if (row.cnt === 0) {
+    db.prepare("INSERT INTO welcome (id, message) VALUES (1, ?)").run(
+      "Welcome to SiteBridge! 🚀 Your Next.js + React app is up and running."
+    );
+  }
 }

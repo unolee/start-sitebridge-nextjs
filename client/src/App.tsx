@@ -2,43 +2,43 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { fetchApi } from "./api";
 
-interface HelloResponse {
-  message: string;
-  timestamp: string;
+function Nav() {
+  return (
+    <nav className="flex gap-4 p-4 bg-zinc-900 text-white">
+      <Link to="/" className="font-semibold hover:text-blue-400">
+        Home
+      </Link>
+      <Link to="/about" className="font-semibold hover:text-blue-400">
+        About
+      </Link>
+    </nav>
+  );
 }
 
 function Home() {
-  const [data, setData] = useState<HelloResponse | null>(null);
+  const [data, setData] = useState<{ message: string; timestamp: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchApi<HelloResponse>("/api/hello")
+    fetchApi<{ message: string; timestamp: string }>("/api/hello")
       .then(setData)
       .catch((err) => setError(err.message));
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Home</h1>
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-700 mb-3">
-          API Response
-        </h2>
-        {error && (
+    <div className="max-w-2xl mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-4">SiteBridge + Next.js</h1>
+      <p className="text-zinc-600 mb-6">
+        Your full-stack app is up and running. Edit the client and server to get started.
+      </p>
+      <div className="bg-zinc-100 rounded-lg p-4">
+        <h2 className="text-sm font-semibold text-zinc-500 mb-2">API Response</h2>
+        {error ? (
           <p className="text-red-600">Error: {error}</p>
-        )}
-        {data && (
-          <div className="space-y-2">
-            <p className="text-gray-800">
-              <span className="font-medium">Message:</span> {data.message}
-            </p>
-            <p className="text-gray-500 text-sm">
-              <span className="font-medium">Timestamp:</span> {data.timestamp}
-            </p>
-          </div>
-        )}
-        {!data && !error && (
-          <p className="text-gray-400">Loading...</p>
+        ) : data ? (
+          <pre className="text-sm text-zinc-800">{JSON.stringify(data, null, 2)}</pre>
+        ) : (
+          <p className="text-zinc-400">Loading...</p>
         )}
       </div>
     </div>
@@ -47,46 +47,30 @@ function Home() {
 
 function About() {
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">About</h1>
-      <div className="bg-white rounded-lg shadow p-6">
-        <p className="text-gray-700">
-          This is a starter template powered by{" "}
-          <strong>Next.js</strong> (API server) and{" "}
-          <strong>Vite + React</strong> (SPA client), designed for deployment
-          through SiteBridge.
-        </p>
-      </div>
+    <div className="max-w-2xl mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-4">About</h1>
+      <p className="text-zinc-600">
+        This is a Next.js + Vite React SPA boilerplate designed for deployment through SiteBridge.
+      </p>
+      <ul className="mt-4 list-disc list-inside text-zinc-600 space-y-1">
+        <li>Next.js API server with SQLite (WAL mode)</li>
+        <li>React 19 with React Router</li>
+        <li>Tailwind CSS v4</li>
+        <li>Vite for fast development and builds</li>
+        <li>GitHub Actions CI/CD pipeline</li>
+      </ul>
     </div>
   );
 }
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-6">
-          <span className="font-bold text-lg text-gray-900">SiteBridge</span>
-          <Link
-            to="/"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            to="/about"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            About
-          </Link>
-        </div>
-      </nav>
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </main>
+    <div className="min-h-screen bg-white">
+      <Nav />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
     </div>
   );
 }
